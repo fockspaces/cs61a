@@ -23,6 +23,9 @@ def summation(n, term):
     """
     assert n >= 1
     "*** YOUR CODE HERE ***"
+    if n == 1:
+        return term(n)
+    return term(n) + summation(n - 1, term)
 
 
 def paths(m, n):
@@ -39,6 +42,13 @@ def paths(m, n):
     1
     """
     "*** YOUR CODE HERE ***"
+    def helper(i, j):
+        if i == m and j == n:
+            return 1
+        if i > m or j > n:
+            return 0
+        return helper(i + 1, j) + helper(i, j + 1)
+    return helper(1, 1)
 
 
 def pascal(row, column):
@@ -54,6 +64,12 @@ def pascal(row, column):
     6
     """
     "*** YOUR CODE HERE ***"
+    if column == 0 or row == column:
+        return 1
+    if row < column:
+        return 0
+    return pascal(row - 1, column) + pascal(row - 1, column - 1)
+    
 
 
 def double_eights(n):
@@ -78,6 +94,14 @@ def double_eights(n):
     True
     """
     "*** YOUR CODE HERE ***"
+    def helper(remain, prev):
+        if remain == 0:
+            return False
+        next_remain, cur = remain // 10, remain % 10
+        if cur == 8 and prev == 8:
+            return True
+        return helper(next_remain, cur)
+    return helper(n // 10, n % 10)
 
 
 def interleaved_sum(n, odd_term, even_term):
@@ -92,3 +116,8 @@ def interleaved_sum(n, odd_term, even_term):
     True
     """
     "*** YOUR CODE HERE ***"
+    if n == 0:
+        return 0
+    if n == 1:
+        return odd_term(n)
+    return 
