@@ -22,6 +22,13 @@ def count_occurrences(t, n, x):
     2
     """
     "*** YOUR CODE HERE ***"
+    ans = 0
+    while n:
+        num = next(t)
+        if num == x:
+            ans += 1
+        n -= 1
+    return ans
 
 
 def amplify(f, x):
@@ -33,9 +40,13 @@ def amplify(f, x):
     [14, 6, 2]
     """
     "*** YOUR CODE HERE ***"
+    while x:
+        yield x
+        x = f(x)
+    
 
 
-def sequence_gen(term):
+def sequence_gen(term, n = 1):
     """
     Yields term(1), term(2), term(3), ...
     
@@ -49,8 +60,8 @@ def sequence_gen(term):
     ...       ['While', 'For'])
     True
     """
-    yield ___________________
-    yield from ___________________
+    yield term(n)
+    yield from sequence_gen(term, n + 1)
 
 
 def stair_ways(n):
@@ -70,6 +81,18 @@ def stair_ways(n):
     ...     pass
     """
     "*** YOUR CODE HERE ***"
+    if n == 0:
+        yield []
+    if n == 1:
+        yield [1]
+    if n < 2: 
+        return
+    for way in stair_ways(n - 1):
+        yield way + [1]
+    for way in stair_ways(n - 2):
+        yield way + [2]
+        
+    
 
 
 def church_generator(f):
@@ -88,7 +111,9 @@ def church_generator(f):
     3
     4
     """
-    g = ____________________________________________
+    g = lambda x: x
     while True:
-        ____________________________________________
-        ____________________________________________
+        yield g
+        current_g = g
+        g = lambda x, f=f, current_g=current_g: f(current_g(x))
+
