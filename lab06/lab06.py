@@ -267,6 +267,8 @@ def remove_odd_indices(lst, odd):
     True
     """
     "*** YOUR CODE HERE ***"
+    return [lst[i] for i in range(len(lst)) if i % 2 != odd]
+
 
 
 def subset_sum(target, lst):
@@ -283,6 +285,13 @@ def subset_sum(target, lst):
     True
     """
     "*** YOUR CODE HERE ***"
+    if target == 0:
+        return True
+    if not lst:
+        return False 
+    return subset_sum(target - lst[0], lst[1:]) or subset_sum(target, lst[1:])
+    
+
 
 
 def card(n):
@@ -311,11 +320,11 @@ def shuffle(cards):
     ['AH', 'AD', 'AS', 'AC', '2H', '2D', '2S', '2C', '3H', '3D', '3S', '3C']
     """
     assert len(cards) % 2 == 0, 'len(cards) must be even'
-    half = _______________
+    half = len(cards) // 2
     shuffled = []
-    for i in _____________:
-        _________________
-        _________________
+    for i in range(half):
+        shuffled.append(cards[i])
+        shuffled.append(cards[i + half])
     return shuffled
 
 
@@ -356,9 +365,9 @@ def trade(first, second):
     """
     m, n = 1, 1
 
-    equal_prefix = lambda: ______________________
-    while _______________________________:
-        if __________________:
+    equal_prefix = lambda: sum(first[:m]) == sum(second[:n])
+    while m <= len(first) and n <= len(second) and not equal_prefix():
+        if sum(first[:m]) < sum(second[:n]):
             m += 1
         else:
             n += 1
@@ -392,11 +401,12 @@ def interval(a, b):
 def lower_bound(x):
     """Return the lower bound of interval x."""
     "*** YOUR CODE HERE ***"
-
+    return x[0]
 
 def upper_bound(x):
     """Return the upper bound of interval x."""
     "*** YOUR CODE HERE ***"
+    return x[1]
 
 
 def str_interval(x):
@@ -415,10 +425,10 @@ def add_interval(x, y):
 def mul_interval(x, y):
     """Return the interval that contains the product of any value in x and any
     value in y."""
-    p1 = x[0] * y[0]
-    p2 = x[0] * y[1]
-    p3 = x[1] * y[0]
-    p4 = x[1] * y[1]
+    p1 = lower_bound(x) * lower_bound(y)
+    p2 = lower_bound(x) * upper_bound(y)
+    p3 = upper_bound(x) * lower_bound(y)
+    p4 = upper_bound(x) * upper_bound(y)
     return [min(p1, p2, p3, p4), max(p1, p2, p3, p4)]
 
 
@@ -426,6 +436,12 @@ def sub_interval(x, y):
     """Return the interval that contains the difference between any value in x
     and any value in y."""
     "*** YOUR CODE HERE ***"
+    p1 = lower_bound(x) - lower_bound(y)
+    p2 = lower_bound(x) - upper_bound(y)
+    p3 = upper_bound(x) - lower_bound(y)
+    p4 = upper_bound(x) - upper_bound(y)
+    return [min(p1, p2, p3, p4), max(p1, p2, p3, p4)]
+
 
 
 def div_interval(x, y):
@@ -433,6 +449,7 @@ def div_interval(x, y):
     any value in y. Division is implemented as the multiplication of x by the
     reciprocal of y."""
     "*** YOUR CODE HERE ***"
+    assert upper_bound(y) != 0 and lower_bound(y) != 0
     reciprocal_y = interval(1 / upper_bound(y), 1 / lower_bound(y))
     return mul_interval(x, reciprocal_y)
 
@@ -457,8 +474,8 @@ def check_par():
     >>> lower_bound(x) != lower_bound(y) or upper_bound(x) != upper_bound(y)
     True
     """
-    r1 = interval(1, 1)  # Replace this line!
-    r2 = interval(1, 1)  # Replace this line!
+    r1 = interval(1, 2)  # Replace this line!
+    r2 = interval(1, 3)  # Replace this line!
     return r1, r2
 
 
@@ -473,6 +490,16 @@ def preorder(t):
     [2, 4, 6]
     """
     "*** YOUR CODE HERE ***"
+    result = []
+    def DFS(t):
+        if not t:
+            return
+        result.append(label(t))
+        for b in branches(t):
+            DFS(b)
+    DFS(t)
+    return result
+    
 
 
 def repeated(t, k):
@@ -498,6 +525,21 @@ def repeated(t, k):
     """
     assert k > 1
     "*** YOUR CODE HERE ***"
+    prev = None
+    count = 1
+    while t:
+        item = next(t)
+        if item == prev:
+            count += 1
+        else:
+            prev = item
+            count = 1
+        if count == k:
+            return item
+        
+
+
+
 
 
 def hailstone(n):
@@ -514,7 +556,14 @@ def hailstone(n):
     1
     """
     "*** YOUR CODE HERE ***"
-
+    assert n > 0
+    while n != 1:
+        yield(n)
+        if n % 2 == 0:
+            n = n // 2
+        else:
+            n = n * 3 + 1
+    yield(n)
 
 def change_abstraction(change):
     """
